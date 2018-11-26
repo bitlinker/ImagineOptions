@@ -30,6 +30,7 @@ namespace ImagineOption
             UpdateChatFontSize(model);
             UpdateDisplayAdapterOutputAndResolutions();
             chkJapLocale.Checked = model.JapLocale;
+            chkUseUpadterBlacklists.Checked = !model.disableBlacklists;
         }
 
         private void UpdateFullscreen(OptionsModel model)
@@ -94,6 +95,11 @@ namespace ImagineOption
         private void chkJapLocale_CheckedChanged(object sender, EventArgs e)
         {
             business.GetOptionsModel().JapLocale = chkJapLocale.Checked;
+        }
+
+        private void chkUseUpadterBlacklists_CheckedChanged(object sender, EventArgs e)
+        {
+            business.GetOptionsModel().disableBlacklists = !chkUseUpadterBlacklists.Checked;
         }
 
         private void onError(Exception e)

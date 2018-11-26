@@ -7,6 +7,7 @@ namespace ImagineOption
     {
         private const string OPTIONS_OUTSIDE_FILENAME = "OutsideOption.txt";
         private const string OPTIONS_NEW_FILENAME = "LauncherOption.txt";
+        private const string OPTIONS_UPDATER_FILENAME = "ImagineUpdate.dat";
 
         private const string OPTION_ADAPTER = "-Adapter";
         private const string OPTION_FONTSIZE = "-ChatFontSizeType";
@@ -17,6 +18,13 @@ namespace ImagineOption
 
         private const string OPTION_LOCALE_DEFAULT = "locale=Default";
         private const string OPTION_LOCALE_JAP = "locale=Japanese";
+
+        // Updater options
+        private const string OPTION_CATEGORY_SETTING = "[Setting]";
+        private const string OPTION_BASE_URL1 = "BaseURL1";
+        private const string OPTION_INFORMATION = "Information";
+        private const string OPTION_CATEGORY_CUSTOM = "[Custom]";
+        private const string OPTION_DISABLE_BLACKLISTS = "DisableBlacklists";
 
         public OptionsModel LoadOptions()
         {
@@ -74,6 +82,37 @@ namespace ImagineOption
                     }
                 }
             }
+
+            if (File.Exists(OPTIONS_UPDATER_FILENAME))
+            {
+                using (StreamReader file = new StreamReader(OPTIONS_UPDATER_FILENAME))
+                {
+                    string line;
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        line = line.Trim();
+                        if (line.Length == 0) continue;
+                        // TODO: handle categories if needed
+                        if (line.StartsWith("[")) continue;
+
+                        var split = splitUpdaterOptionLine(line);
+                        if (split == null) throw new IOException("Can't split string: " + line);
+
+                        switch (split[0])
+                        {
+                            case OPTION_BASE_URL1:
+                                optionsModel.baseUrl1 = split[1];
+                                break;
+                            case OPTION_INFORMATION:
+                                optionsModel.information = split[1];
+                                break;
+                            case OPTION_DISABLE_BLACKLISTS:
+                                optionsModel.disableBlacklists = split[1].Equals("true", StringComparison.InvariantCultureIgnoreCase);
+                                break;
+                        }
+                    }
+                }
+            }
             return optionsModel;
         }
 
@@ -91,7 +130,17 @@ namespace ImagineOption
 
             using (StreamWriter file = new StreamWriter(OPTIONS_NEW_FILENAME))
             {
-                file.WriteLine(model.JapLocale ? OPTION_LOCALE_JAP: OPTION_LOCALE_DEFAULT);
+                file.WriteLine(model.JapLocale ? OPTION_LOCALE_JAP : OPTION_LOCALE_DEFAULT);
+            }
+
+            using (StreamWriter file = new StreamWriter(OPTIONS_UPDATER_FILENAME))
+            {
+                file.WriteLine(OPTION_CATEGORY_SETTING);
+                file.WriteLine(OPTION_BASE_URL1 + " = " + model.baseUrl1);
+                file.WriteLine(OPTION_INFORMATION + " = " + model.information);
+                file.WriteLine();
+                file.WriteLine(OPTION_CATEGORY_CUSTOM);
+                file.WriteLine(OPTION_DISABLE_BLACKLISTS + " = " + model.disableBlacklists);
             }
         }
 
@@ -103,6 +152,17 @@ namespace ImagineOption
             string[] result = new string[2];
             result[0] = line.Substring(0, spaceIndex);
             result[1] = line.Substring(spaceIndex + 1);
+            return result;
+        }
+
+        private string[] splitUpdaterOptionLine(string line)
+        {
+            var spaceIndex = line.IndexOf('=');
+            if (spaceIndex == -1) return null;
+
+            string[] result = new string[2];
+            result[0] = line.Substring(0, spaceIndex).Trim();
+            result[1] = line.Substring(spaceIndex + 1).Trim();
             return result;
         }
     }

@@ -42,6 +42,7 @@
             this.tblOptions = new System.Windows.Forms.TableLayoutPanel();
             this.grpClient = new System.Windows.Forms.GroupBox();
             this.chkJapLocale = new System.Windows.Forms.CheckBox();
+            this.chkUseUpadterBlacklists = new System.Windows.Forms.CheckBox();
             this.tblOptions.SuspendLayout();
             this.grpClient.SuspendLayout();
             this.SuspendLayout();
@@ -124,6 +125,7 @@
             // grpClient
             // 
             resources.ApplyResources(this.grpClient, "grpClient");
+            this.grpClient.Controls.Add(this.chkUseUpadterBlacklists);
             this.grpClient.Controls.Add(this.chkJapLocale);
             this.grpClient.Controls.Add(this.tblOptions);
             this.grpClient.Name = "grpClient";
@@ -135,6 +137,13 @@
             this.chkJapLocale.Name = "chkJapLocale";
             this.chkJapLocale.UseVisualStyleBackColor = true;
             this.chkJapLocale.CheckedChanged += new System.EventHandler(this.chkJapLocale_CheckedChanged);
+            // 
+            // chkUseUpadterBlacklists
+            // 
+            resources.ApplyResources(this.chkUseUpadterBlacklists, "chkUseUpadterBlacklists");
+            this.chkUseUpadterBlacklists.Name = "chkUseUpadterBlacklists";
+            this.chkUseUpadterBlacklists.UseVisualStyleBackColor = true;
+            this.chkUseUpadterBlacklists.CheckedChanged += new System.EventHandler(this.chkUseUpadterBlacklists_CheckedChanged);
             // 
             // FormMain
             // 
@@ -169,6 +178,7 @@
         private System.Windows.Forms.TableLayoutPanel tblOptions;
         private System.Windows.Forms.GroupBox grpClient;
         private System.Windows.Forms.CheckBox chkJapLocale;
+        private System.Windows.Forms.CheckBox chkUseUpadterBlacklists;
     }
 }
 
